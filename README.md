@@ -5,7 +5,9 @@
 - Web image preview customization via url
 - Web title customization
 - Cloudflared & serveo.net integration for tunneling
-- WebRTC IP discovering via stun servers  
+- WebRTC IP discovering via stun servers
+- Api integration for geolocation
+- Failover in case of WebRTC fail in client side 
 
 
 ## Installation
